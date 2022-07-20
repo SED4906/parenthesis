@@ -23,7 +23,6 @@ jobs:
     - name: Build
       run: cargo build --verbose
     - uses: actions/upload-artifact@v3
-    - name: Upload artifact
       with:
         name: parenthesis
         path: target/debug/parenthesis
