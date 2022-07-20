@@ -19,6 +19,6 @@ jobs:
     - name: Install dependencies (Ubuntu)
       run: |
           sudo apt -q update
-          sudo apt -q install --no-install-recommends libgtk-3-dev
+          sudo apt -q install --no-install-recommends libgtk-3-dev libvulkan-dev
     - name: Build
       run: cargo build --verbose
