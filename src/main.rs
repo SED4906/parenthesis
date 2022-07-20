@@ -42,9 +42,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         for window in &mut windows {
             let title=format!("[{}] {}",windownum, window.path);
             Window::new(title)
-                .size([300.0, 256.0], Condition::Always)
+                .size([300.0, 256.0], Condition::FirstUseEver)
                 .menu_bar(true)
-                .resizable(false)
                 .build(ui, || {
                     if let Some(menu_bar) = ui.begin_menu_bar() {
                         if let Some(menu) = ui.begin_menu("File") {
@@ -81,7 +80,9 @@ fn main() -> Result<(), Box<dyn Error>> {
                         }
                         menu_bar.end();
                     }
-                    ui.input_text_multiline("", &mut window.text,[300.0,200.0]).build();
+                    let mut windowsize = sys::ImVec2 {x:300.0,y:256.0};
+                    unsafe { sys::igGetWindowSize(&mut windowsize); }
+                    ui.input_text_multiline("", &mut window.text,[windowsize.x,windowsize.y-60.0]).build();
                 });
             windownum+=1;
         }
