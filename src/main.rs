@@ -13,6 +13,7 @@ const APP_NAME: &str = "parenthesis";
 struct WindowData {
     text: String,
     path: String,
+    pos: [f32; 2],
     size: [f32; 2]
 }
 
@@ -23,7 +24,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         if let Some(menu_bar) = ui.begin_main_menu_bar() {
             if let Some(menu) = ui.begin_menu("Window") {
                 if MenuItem::new("New").build(ui) {
-                    windows.push(WindowData {text:"".into(), path:"".into(), size:[300.0,256.0]});
+                    windows.push(WindowData {text:"".into(), path:"".into(), size:[300.0,256.0], pos:[60.0,60.0]});
                 }
                 for windowindex in 0..windows.len() {
                     let closename=format!("Close [{}]",windowindex+1);
@@ -50,6 +51,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             let title=format!("[{}] {}",windownum, window.path);
             Window::new(title)
                 .size(window.size, Condition::FirstUseEver)
+                .position(window.pos, Condition::FirstUseEver)
                 .menu_bar(true)
                 .build(ui, || {
                     if let Some(menu_bar) = ui.begin_menu_bar() {
@@ -88,6 +90,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                         menu_bar.end();
                     }
                     window.size = ui.window_size();
+                    window.pos = ui.window_pos();
                     ui.input_text_multiline("", &mut window.text,[window.size[0],window.size[1]-60.0]).build();
                 });
             windownum+=1;
