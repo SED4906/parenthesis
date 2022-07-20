@@ -2,6 +2,7 @@ mod common;
 
 use common::*;
 use imgui::*;
+use chrono::prelude::*;
 use simple_logger::SimpleLogger;
 use std::error::Error;
 use rfd::FileDialog;
@@ -11,7 +12,8 @@ const APP_NAME: &str = "parenthesis";
 
 struct WindowData {
     text: String,
-    path: String
+    path: String,
+    size: [f32; 2]
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -20,8 +22,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     System::new(APP_NAME)?.run((), move |_, ui, _| {
         if let Some(menu_bar) = ui.begin_main_menu_bar() {
             if let Some(menu) = ui.begin_menu("Window") {
-                if MenuItem::new("New").shortcut("CTRL+N").build(ui) {
-                    windows.push(WindowData {text:"".into(), path:"".into()});
+                if MenuItem::new("New").build(ui) {
+                    windows.push(WindowData {text:"".into(), path:"".into(), size:[300.0,256.0]});
                 }
                 for windowindex in 0..windows.len() {
                     let closename=format!("Close [{}]",windowindex+1);
@@ -36,13 +38,18 @@ fn main() -> Result<(), Box<dyn Error>> {
                 "Mouse Position: ({:.1},{:.1})",
                 mouse_pos[0], mouse_pos[1]
             ));
+            let dt = Local::now();
+            ui.text(format!(
+                "System Time: ({})",
+                dt.format("%a, %Y-%m-%d %H:%M:%S")
+            ));
             menu_bar.end();
         }
         let mut windownum = 1;
         for window in &mut windows {
             let title=format!("[{}] {}",windownum, window.path);
             Window::new(title)
-                .size([300.0, 256.0], Condition::FirstUseEver)
+                .size(window.size, Condition::FirstUseEver)
                 .menu_bar(true)
                 .build(ui, || {
                     if let Some(menu_bar) = ui.begin_menu_bar() {
@@ -80,9 +87,8 @@ fn main() -> Result<(), Box<dyn Error>> {
                         }
                         menu_bar.end();
                     }
-                    let mut windowsize = sys::ImVec2 {x:300.0,y:256.0};
-                    unsafe { sys::igGetWindowSize(&mut windowsize); }
-                    ui.input_text_multiline("", &mut window.text,[windowsize.x,windowsize.y-60.0]).build();
+                    window.size = ui.window_size();
+                    ui.input_text_multiline("", &mut window.text,[window.size[0],window.size[1]-60.0]).build();
                 });
             windownum+=1;
         }
