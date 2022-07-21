@@ -41,7 +41,7 @@ jobs:
         run: cargo install clippy-sarif sarif-fmt
 
       - name: Install dependencies
-        run:
+        run:  
           sudo apt -q update
           sudo apt -q install --no-install-recommends libgtk-3-dev
       
