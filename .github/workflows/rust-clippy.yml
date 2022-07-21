@@ -40,6 +40,17 @@ jobs:
       - name: Install required cargo
         run: cargo install clippy-sarif sarif-fmt
 
+      - name: Install dependencies
+        run:
+          sudo apt -q update
+          sudo apt -q install --no-install-recommends libgtk-3-dev
+      
+      - name: Install Vulkan SDK
+        uses: humbletim/install-vulkan-sdk@v1.1.1
+        with:
+          version: latest
+          cache: true
+
       - name: Run rust-clippy
         run:
           cargo clippy
@@ -48,7 +59,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: rust-clippy-results.sarif
           wait-for-processing: true
