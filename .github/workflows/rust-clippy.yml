@@ -42,7 +42,7 @@ jobs:
 
       - name: Install dependencies
         run:  
-          sudo apt -q update
+          sudo apt -q update &&
           sudo apt -q install --no-install-recommends libgtk-3-dev
       
       - name: Install Vulkan SDK
