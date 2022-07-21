@@ -8,7 +8,7 @@ use std::error::Error;
 use rfd::FileDialog;
 use std::fs;
 
-const APP_NAME: &str = "parenthesis";
+const APP_NAME: &str = "Parenthesis";
 
 struct WindowData {
     text: String,
