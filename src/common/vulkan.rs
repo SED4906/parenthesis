@@ -60,7 +60,7 @@ mod buffer {
             let data_ptr =
                 device.map_memory(buffer_memory, 0, size, vk::MemoryMapFlags::empty())?;
             let mut align = ash::util::Align::new(data_ptr, mem::align_of::<T>() as _, size);
-            align.copy_from_slice(&data);
+            align.copy_from_slice(data);
             device.unmap_memory(buffer_memory);
         };
         Ok(())

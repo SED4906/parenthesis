@@ -62,26 +62,26 @@ fn main() -> Result<(), Box<dyn Error>> {
                             }
                             if MenuItem::new("Open").build(ui) {
                                 let files = FileDialog::new().pick_file();
-                                if files.is_some() {
+                                if let Some(ref pathbuf) = files {
                                     window.text = fs::read_to_string(files.as_ref().unwrap()).unwrap();
-                                    window.path = files.unwrap().to_str().unwrap().into();
+                                    window.path = pathbuf.to_str().unwrap().into();
                                 }
                             }
                             if MenuItem::new("Save As").build(ui) {
                                 let res = rfd::FileDialog::new().save_file();
-                                if res.is_some() {
-                                    window.path = res.unwrap().to_str().unwrap().into();
-                                    fs::write(&window.path,&window.text);
+                                if let Some(pathbuf) = res {
+                                    window.path = pathbuf.to_str().unwrap().into();
+                                    fs::write(&window.path,&window.text).expect("Failed to write to file");
                                 }
                             }
                             if MenuItem::new("Save").build(ui) {
-                                if window.path.len() > 0 {
-                                    fs::write(&window.path,&window.text);
+                                if !window.path.is_empty() {
+                                    fs::write(&window.path,&window.text).expect("Failed to write to file");
                                 } else {
                                     let res = rfd::FileDialog::new().save_file();
-                                    if res.is_some() {
-                                        window.path = res.unwrap().to_str().unwrap().into();
-                                        fs::write(&window.path,&window.text);
+                                    if let Some(pathbuf) = res {
+                                        window.path = pathbuf.to_str().unwrap().into();
+                                        fs::write(&window.path,&window.text).expect("Failed to write to file");
                                     }
                                 }
                             }

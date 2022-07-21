@@ -24,16 +24,6 @@ use winit::{
     event_loop::{ControlFlow, EventLoop},
     window::{Window, WindowBuilder},
 };
-#[cfg(feature = "gpu-allocator")]
-use {
-    gpu_allocator::vulkan::{Allocator, AllocatorCreateDesc},
-    std::sync::{Arc, Mutex},
-};
-#[cfg(feature = "vk-mem")]
-use {
-    std::sync::{Arc, Mutex},
-    vk_mem::{Allocator, AllocatorCreateInfo},
-};
 
 const WIDTH: u32 = 1024;
 const HEIGHT: u32 = 768;
@@ -134,57 +124,6 @@ impl<A: App> System<A> {
         imgui.io_mut().font_global_scale = (1.0 / hidpi_factor) as f32;
         platform.attach_window(imgui.io_mut(), &window, HiDpiMode::Rounded);
 
-        #[cfg(feature = "gpu-allocator")]
-        let renderer = {
-            let allocator = Allocator::new(&AllocatorCreateDesc {
-                instance: vulkan_context.instance.clone(),
-                device: vulkan_context.device.clone(),
-                physical_device: vulkan_context.physical_device,
-                debug_settings: Default::default(),
-                buffer_device_address: false,
-            })?;
-
-            Renderer::with_gpu_allocator(
-                Arc::new(Mutex::new(allocator)),
-                vulkan_context.device.clone(),
-                vulkan_context.graphics_queue,
-                vulkan_context.command_pool,
-                swapchain.render_pass,
-                &mut imgui,
-                Some(Options {
-                    in_flight_frames: 1,
-                    ..Default::default()
-                }),
-            )?
-        };
-
-        #[cfg(feature = "vk-mem")]
-        let renderer = {
-            let allocator = {
-                let allocator_create_info = AllocatorCreateInfo::new(
-                    &vulkan_context.instance,
-                    &vulkan_context.device,
-                    &vulkan_context.physical_device,
-                )
-                .vulkan_api_version(vk::make_api_version(0, 1, 0, 0));
-
-                Allocator::new(allocator_create_info)?
-            };
-
-            Renderer::with_vk_mem_allocator(
-                Arc::new(Mutex::new(allocator)),
-                vulkan_context.device.clone(),
-                vulkan_context.graphics_queue,
-                vulkan_context.command_pool,
-                swapchain.render_pass,
-                &mut imgui,
-                Some(Options {
-                    in_flight_frames: 1,
-                    ..Default::default()
-                }),
-            )?
-        };
-
         #[cfg(not(any(feature = "gpu-allocator", feature = "vk-mem")))]
         let renderer = Renderer::with_default_allocator(
             &vulkan_context.instance,
@@ -255,7 +194,7 @@ impl<A: App> System<A> {
 
         // Main loop
         event_loop.run(move |event, _, control_flow| {
-            let mut renderer = &mut renderer; // Makes sure Renderer is moved before VulkanContext and therefore dropped before
+            let renderer = &mut renderer; // Makes sure Renderer is moved before VulkanContext and therefore dropped before
 
             *control_flow = ControlFlow::Poll;
 
@@ -343,8 +282,8 @@ impl<A: App> System<A> {
                         swapchain.framebuffers[image_index as usize],
                         swapchain.render_pass,
                         swapchain.extent,
-                        &mut renderer,
-                        &draw_data,
+                        renderer,
+                        draw_data,
                     )
                     .expect("Failed to record command buffer");
 
@@ -533,7 +472,7 @@ impl Swapchain {
     fn new(vulkan_context: &VulkanContext) -> Result<Self, Box<dyn Error>> {
         // Swapchain
         let (loader, khr, extent, format, images, image_views) =
-            create_vulkan_swapchain(&vulkan_context)?;
+            create_vulkan_swapchain(vulkan_context)?;
 
         // Renderpass
         let render_pass = create_vulkan_render_pass(&vulkan_context.device, format)?;
@@ -797,17 +736,19 @@ fn create_vulkan_device_and_graphics_and_present_qs(
     Ok((device, graphics_queue, present_queue))
 }
 
+type VKswapchain = (
+    SwapchainLoader,
+    vk::SwapchainKHR,
+    vk::Extent2D,
+    vk::Format,
+    Vec<vk::Image>,
+    Vec<vk::ImageView>,
+);
+
 fn create_vulkan_swapchain(
     vulkan_context: &VulkanContext,
 ) -> Result<
-    (
-        SwapchainLoader,
-        vk::SwapchainKHR,
-        vk::Extent2D,
-        vk::Format,
-        Vec<vk::Image>,
-        Vec<vk::ImageView>,
-    ),
+    VKswapchain,
     Box<dyn Error>,
 > {
     log::debug!("Creating vulkan swapchain");
@@ -1010,6 +951,7 @@ fn create_vulkan_framebuffers(
         .collect::<Result<Vec<_>, _>>()?)
 }
 
+#[allow(clippy::too_many_arguments)]
 fn record_command_buffers(
     device: &Device,
     command_pool: vk::CommandPool,
