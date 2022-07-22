@@ -1070,6 +1070,7 @@ dependencies = [
  "ash",
  "ash-window",
  "chrono",
+ "embed-resource",
  "image",
  "imgui",
  "imgui-rs-vulkan-renderer",
