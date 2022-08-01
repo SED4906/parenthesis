@@ -100,6 +100,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                     }
                     menu_bar.end();
                 }
+            });
             windownum+=1;
         }
     })?;
