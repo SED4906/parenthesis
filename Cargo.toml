@@ -20,5 +20,5 @@ log = "0.4"
 ash = { version = "0.37", default-features = false, features = ["debug", "linked"] }
 ash-window = "0.10"
 image = "0.24"
-rfd = "0.9.1"
+rfd = "0.10.0"
 chrono = "0.4"
