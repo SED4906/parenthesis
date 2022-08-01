@@ -59,7 +59,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
         let mut windownum = 1;
         for window in &mut windows {
-            let title=format!("[{}] {} ({})",windownum, window.path, window.form);
+            let title=format!("[{}] {}",windownum, window.path);
             Window::new(title)
                 .size(window.size, Condition::FirstUseEver)
                 .position(window.pos, Condition::FirstUseEver)
