@@ -7,8 +7,6 @@ On Linux, requires Vulkan and GTK.
 ## Instructions
 Window->New editor: creates a window to edit a single file in.
 
-Window->New shell (unimplemented): Creates a window to run commands in. Uses pwsh by default.
-
 Window->Close \[\#\]: closes the window with the given number.
 
 File->New: clears the window.

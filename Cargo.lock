@@ -34,12 +34,12 @@ checksum = "006ca68e0f2b03f22d6fa9f2860f85aed430d257fec20f8879b2145e7c7ae1a6"
 
 [[package]]
 name = "ash-window"
-version = "0.10.0"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4e199a4119a1695c8d865b3f5d6c1ee164370c0c5bc91c8284cf79b0f0be78ba"
+checksum = "7f0573d0bfb0da1260b38f4bfd33fae0c71466e78d070a0f72a490bc09ab6a57"
 dependencies = [
  "ash",
- "raw-window-handle 0.3.4",
+ "raw-window-handle 0.4.3",
  "raw-window-metal",
 ]
 
@@ -804,9 +804,9 @@ dependencies = [
 
 [[package]]
 name = "imgui-rs-vulkan-renderer"
-version = "1.3.0"
+version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "797477fc85dded9feda5bc044e9bcdf6dfaa3dd3eb5c1f37da6c3dc6b50d6ed0"
+checksum = "3c84f16a3e43c4ebb276eb204a2d29a838be3f3bc2b35ee83b1143db6e3bf765"
 dependencies = [
  "ash",
  "imgui",
@@ -1386,16 +1386,6 @@ dependencies = [
 
 [[package]]
 name = "raw-window-handle"
-version = "0.3.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e28f55143d0548dad60bb4fbdc835a3d7ac6acc3324506450c5fdd6e42903a76"
-dependencies = [
- "libc",
- "raw-window-handle 0.4.3",
-]
-
-[[package]]
-name = "raw-window-handle"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b800beb9b6e7d2df1fe337c9e3d04e3af22a124460fb4c30fcc22c9117cefb41"
@@ -1413,15 +1403,24 @@ dependencies = [
 ]
 
 [[package]]
-name = "raw-window-metal"
-version = "0.1.2"
+name = "raw-window-handle"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2cd21ed1cdef7f1b1579b972148ba6058b5b545959a14d91ea83c4f0ea9f289b"
+checksum = "ed7e3d950b66e19e0c372f3fa3fbbcf85b1746b571f74e0c2af6042a5c93420a"
+dependencies = [
+ "cty",
+]
+
+[[package]]
+name = "raw-window-metal"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7dd1dc19cf6fa2c1b7be107990884912d012c09d0d7b1631f76df7b01c07374b"
 dependencies = [
  "cocoa",
  "core-graphics 0.22.3",
  "objc",
- "raw-window-handle 0.3.4",
+ "raw-window-handle 0.4.3",
 ]
 
 [[package]]
@@ -1459,13 +1458,12 @@ dependencies = [
 
 [[package]]
 name = "rfd"
-version = "0.9.1"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f121348fd3b9035ed11be1f028e8944263c30641f8c5deacf57a4320782fb402"
+checksum = "0149778bd99b6959285b0933288206090c50e2327f47a9c463bfdbf45c8823ea"
 dependencies = [
  "block",
  "dispatch",
- "embed-resource",
  "glib-sys",
  "gobject-sys",
  "gtk-sys",
@@ -1475,7 +1473,7 @@ dependencies = [
  "objc",
  "objc-foundation",
  "objc_id",
- "raw-window-handle 0.4.3",
+ "raw-window-handle 0.5.0",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",
