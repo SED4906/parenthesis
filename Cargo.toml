@@ -15,7 +15,7 @@ winit = "0.26.0"
 imgui = { version = "^0.8", features = ["tables-api"] }
 imgui-winit-support = { version = "^0.8", default-features = false, features = ["winit-26"] }
 imgui-rs-vulkan-renderer = "1.4.0"
-simple_logger = "2.1"
+simple_logger = "2.3"
 log = "0.4"
 ash = { version = "0.37", default-features = false, features = ["debug", "linked"] }
 ash-window = "0.11"
