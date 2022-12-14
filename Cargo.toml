@@ -18,7 +18,7 @@ imgui-rs-vulkan-renderer = "1.5.0"
 simple_logger = "4.0"
 log = "0.4"
 ash = { version = "0.37", default-features = false, features = ["debug", "linked"] }
-ash-window = "0.11"
+ash-window = "0.12"
 image = "0.24"
 rfd = "0.10.0"
 chrono = "0.4"
