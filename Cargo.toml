@@ -11,7 +11,7 @@ build = "build.rs"
 embed-resource = "1.8"
 
 [dependencies]
-winit = "0.26.0"
+winit = "0.27.1"
 imgui = { version = "^0.8", features = ["tables-api"] }
 imgui-winit-support = { version = "^0.8", default-features = false, features = ["winit-26"] }
 imgui-rs-vulkan-renderer = "1.5.0"
