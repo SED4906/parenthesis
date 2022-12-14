@@ -8,7 +8,7 @@ edition = "2021"
 build = "build.rs"
 
 [build-dependencies]
-embed-resource = "1.7"
+embed-resource = "1.8"
 
 [dependencies]
 winit = "0.26.0"
